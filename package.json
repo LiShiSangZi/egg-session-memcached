@@ -5,6 +5,9 @@
   "main": "index.js",
   "author": "gogocrow",
   "license": "MIT",
+  "eggPlugin": {
+    "name": "session-memcached"
+  },
   "dependencies": {
     "memcached": "^2.2.2"
   }

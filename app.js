@@ -4,51 +4,56 @@ const Memcached = require('memcached');
 const DEFAULT_MAX_AGE = 1000 * 60 * 60 * 24;
 
 module.exports = app => {
-  const memcached = new Memcached('10.0.101.54:11211', {
+  app.addSingleton('session-memcached', createMemcached);
+}
+
+function createMemcached(config, app) {
+  const memcached = new Memcached(`${config.host}:${config.port || '11211'}`, {
     retries: 10,
     retry: 10000,
     remove: true,
-    failOverServers: ['10.0.101.54:11211']
+    failOverServers: config.failOverServers || []
+  });
+  app.beforeStart(async() => {
+
+    app.sessionStore = {
+      async get(key) {
+        return new Promise((resolve, reject) => {
+          memcached.get(key, (err, data) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(data);
+            }
+          });
+        });
+      },
+
+      async set(key, sess, maxAge) {
+        return new Promise((resolve, reject) => {
+          memcached.set(key, sess, maxAge / 1000, (err) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve();
+            }
+          });
+        });
+      },
+
+      async destroy(key) {
+        return new Promise((resolve, reject) => {
+          memcached.del(key, (err) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve();
+            }
+          });
+        });
+      },
+    };
   });
 
-  const name = app.config.sessionMem.name;
-  const memcached = name ? app.memcached.get(name) : app.memcached;
-
-  app.sessionStore = {
-    async get(key) {
-      return new Promise((resolve, reject) => {
-        this.memcached.get(key, (err, data) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(data);
-          }
-        });
-      });
-    },
-
-    async set(key, value, maxAge) {
-      return new Promise((resolve, reject) => {
-        this.memcached.get(key, (err, data) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(data);
-          }
-        });
-      });
-    },
-
-    async destroy(key) {
-      return new Promise((resolve, reject) => {
-        this.memcached.del(key, (err) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve();
-          }
-        });
-      });
-    },
-  };
+  return memcached;
 }
