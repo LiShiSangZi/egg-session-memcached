@@ -1,6 +1,6 @@
 {
   "name": "egg-session-memcached",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Egg session plugin for memcached.",
   "main": "index.js",
   "author": "gogocrow",
