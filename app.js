@@ -31,6 +31,7 @@ function createMemcached(config, app) {
 
       async set(key, sess, maxAge) {
         return new Promise((resolve, reject) => {
+          const age = maxAge || DEFAULT_MAX_AGE;
           memcached.set(key, sess, maxAge / 1000, (err) => {
             if (err) {
               reject(err);

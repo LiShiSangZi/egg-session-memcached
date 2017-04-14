@@ -1,12 +1,19 @@
 {
   "name": "egg-session-memcached",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Egg session plugin for memcached.",
   "main": "index.js",
   "author": "gogocrow",
   "license": "MIT",
   "eggPlugin": {
     "name": "session-memcached"
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LiShiSangZi/egg-session-memcached.git"
   },
   "dependencies": {
     "memcached": "^2.2.2"
