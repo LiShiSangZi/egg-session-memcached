@@ -10,7 +10,7 @@ $ npm i egg-session-memcached --save
 ## Usage
 ```javascript
 // {app_root}/config/plugin.js
-exports.memcached = {
+exports['session-memcached'] = {
   enable: true,
   package: 'egg-session-memcached'
 };
