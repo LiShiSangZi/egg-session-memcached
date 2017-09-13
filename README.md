@@ -9,6 +9,15 @@ $ npm i egg-session-memcached --save
 
 ## Usage
 ```javascript
+// {app_root}/app.js
+// If you want to use session in your middleware. You need to add it after session middleware.
+const index = app.config.coreMiddleware.indexOf('session');
+if (index >= 0) {
+  app.config.coreMiddleware.splice(index + 1, 0, MyMiddleware);
+}
+```
+
+```javascript
 // {app_root}/config/plugin.js
 exports['session-memcached'] = {
   enable: true,
